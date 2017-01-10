@@ -5,7 +5,6 @@ import com.originstamp.client.dto.OriginStampTableEntity;
 import com.originstamp.client.exceptions.InvalidConfigurationException;
 import com.originstamp.client.exceptions.InvalidParameterException;
 import org.apache.log4j.Logger;
-import org.omg.CORBA.Request;
 import rx.Observable;
 
 import java.security.NoSuchAlgorithmException;
@@ -132,7 +131,7 @@ public class OriginStamp {
     /**
      * the method creates an Observable for requesting the hashes table by day
      *
-     * @param pDay
+     * @param pDay    filter criteria: Date -> which is converted to a day string in yyyy-MM-dd format
      * @param pOffset offset: starting index (used for Pagination)
      * @param pAmount number of tuples / records which should be returned
      * @return Observable which can be subscribed on to get the hash table results by day
@@ -185,7 +184,7 @@ public class OriginStamp {
     /**
      * the method creates an Observable for requesting the hashes table by comment
      *
-     * @param pComment
+     * @param pComment filter criteria: comment -> entered on the hash creation
      * @param pOffset  offset: starting index (used for Pagination)
      * @param pAmount  number of tuples / records which should be returned
      * @return Observable which can be subscribed on to get the hash table results by comment
@@ -210,7 +209,7 @@ public class OriginStamp {
     /**
      * the method creates an Observable for requesting the hashes table by api key
      *
-     * @param pAPIKey
+     * @param pAPIKey filter criteria: api key -> hashes that are created by a specified api key
      * @param pOffset offset: starting index (used for Pagination)
      * @param pAmount number of tuples / records which should be returned
      * @return Observable which can be subscribed on to get the hash table results by api key
@@ -240,12 +239,14 @@ public class OriginStamp {
     }
 
     /**
-     * @param pHash
-     * @param pComment
-     * @param pMail
-     * @param pTwitter
-     * @param pBitcoin
-     * @return
+     * the method returns an Observable that is used for stamping a new hash
+     *
+     * @param pHash    hash value in HEX
+     * @param pComment comment what the user defined, not necessary
+     * @param pMail    user email address, not necessary
+     * @param pTwitter publish hash on twitter
+     * @param pBitcoin store hash in the blockchain
+     * @return Observable which can be subscribed on to POST the hash data
      * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
      */
     public Observable<OriginStampHash> storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter, boolean pBitcoin) throws InvalidParameterException {
@@ -290,12 +291,14 @@ public class OriginStamp {
     }
 
     /**
-     * @param pBytes
-     * @param pComment
-     * @param pMail
-     * @param pTwitter
-     * @param pBitcoin
-     * @return
+     * the method returns an Observable that is used for stamping a new hash
+     *
+     * @param pBytes   inputstream in bytes
+     * @param pComment comment what the user defined, not necessary
+     * @param pMail    user email address, not necessary
+     * @param pTwitter publish hash on twitter
+     * @param pBitcoin store hash in the blockchain
+     * @return Observable which can be subscribed on to POST the hash data
      * @throws NoSuchAlgorithmException  an error is thrown when the hash algorithm (included in Java) was not found
      * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
      */
