@@ -9,8 +9,11 @@ import java.io.Serializable;
  */
 @XmlRootElement(name = "body")
 public class RequestBodyTableMail implements Serializable {
+    @XmlElement(name = "email")
     private String email;
+    @XmlElement(name = "offset")
     private Integer offset;
+    @XmlElement(name = "records")
     private Integer records;
 
     public String getEmail() {

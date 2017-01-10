@@ -1,5 +1,6 @@
 package com.originstamp.client.request;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -8,8 +9,11 @@ import java.io.Serializable;
  */
 @XmlRootElement(name = "body")
 public class RequestBodyTableComment implements Serializable {
+    @XmlElement(name = "comment")
     private String comment;
+    @XmlElement(name = "offset")
     private Integer offset;
+    @XmlElement(name = "records")
     private Integer records;
 
     public String getComment() {

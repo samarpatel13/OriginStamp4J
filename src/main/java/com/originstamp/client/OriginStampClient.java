@@ -13,14 +13,16 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Thomas on 10.01.17.
  */
 class OriginStampClient {
     // static values
-    private static final String URI_HASH_VALUE = "{hash_value}";
-    private static final String URI_TABLE = "table";
+    private static final String URI_HASH_VALUE = "api/{hash_value}";
+    private static final String URI_TABLE = "api/table";
 
     // logger
     private static final Logger LOGGER = LoggerFactory.getFileLogger(OriginStampClient.class.getSimpleName(), true);
@@ -88,6 +90,64 @@ class OriginStampClient {
     }
 
     /**
+     * returns an observable that requests the hash information from the API
+     *
+     * @param pHash
+     * @return
+     */
+    public Observable<OriginStampHash> storeHashInformation(String pHash, String pComment, String pEmail, boolean pTwitter, boolean pBitcoin) {
+        LOGGER.info("creating Observable from configuration and parameters");
+
+        LOGGER.info("building request body");
+        // init entity
+        Entity body = Entity.json("");
+
+        // creating the body
+        RequestBodyHash requestBody = new RequestBodyHash();
+
+        // setting the parameters
+
+        // check if comment is set
+        if (pComment != null && !pComment.isEmpty()) {
+            // set comment in body
+            requestBody.setComment(pComment);
+        }
+
+        // check if mail is set
+        if (pEmail != null && !pEmail.isEmpty()) {
+            // set email in body
+            requestBody.setEmail(pEmail);
+        }
+
+        // create timestamp operations
+        List<String> submissionOperations = new ArrayList<>();
+        // add default bitcoin
+        if (pBitcoin)
+            submissionOperations.add("btc_seed");
+        if (pTwitter)
+            submissionOperations.add("twitter");
+
+        // setting the submission operation to the body
+        requestBody.setSubmitOps(submissionOperations.toArray(new String[submissionOperations.size()]));
+
+        // set the request body
+        body = Entity.json(requestBody);
+
+        LOGGER.info("request body created");
+        LOGGER.info("building Observable");
+
+        // building observable and return
+        return RxObservable.from(this.restClient)
+                .target(this.originStampConfiguration.getHost() + URI_HASH_VALUE)
+                .resolveTemplate("hash_value", pHash)
+                .request()
+                .headers(this.header)
+                .rx()
+                .post(body, new GenericType<OriginStampHash>() {
+                });
+    }
+
+    /**
      * returns an observable that requests the hash table information from the API based on the parameters
      *
      * @return
@@ -97,9 +157,12 @@ class OriginStampClient {
 
         // fail save
         if (pParameter == null || pParameter.isEmpty() || pParameter.matches("")) {
+            // unfiltered if parameter is not set
             pHashTableType = HashTableType.UNFILTERED;
+        } else {
+            // lower case
+            pParameter = pParameter.toLowerCase();
         }
-
         // init entity
         Entity body = Entity.json("");
 
@@ -142,7 +205,7 @@ class OriginStampClient {
                 // creating body
                 RequestBodyTableDay requestBody = new RequestBodyTableDay();
                 // setting the parameters
-                requestBody.setDate_created(pParameter);
+                requestBody.setDateCreated(pParameter);
                 requestBody.setOffset(pOffset);
                 requestBody.setRecords(pAmount);
                 // creating entity
@@ -153,7 +216,7 @@ class OriginStampClient {
                 // creating body
                 RequestBodyTableApiKey requestBody = new RequestBodyTableApiKey();
                 // setting the parameters
-                requestBody.setApi_key(pParameter);
+                requestBody.setApiKey(pParameter);
                 requestBody.setOffset(pOffset);
                 requestBody.setRecords(pAmount);
                 // creating entity
