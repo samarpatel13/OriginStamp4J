@@ -1,6 +1,7 @@
 package com.originstamp.client;
 
 import com.originstamp.client.exceptions.InvalidConfigurationException;
+import com.originstamp.client.exceptions.InvalidParameterException;
 import org.apache.log4j.Logger;
 
 import java.net.URL;
@@ -46,6 +47,31 @@ class RequestValidation {
 
 
         // else
+        return true;
+    }
+
+    /**
+     * the method validates the pagination parameters for the hash table request
+     *
+     * @param pOffset  Offset: starting index
+     * @param pRecords number of tuples
+     * @return true: valid; false: invalid;
+     * @throws InvalidParameterException an exception is thrown if one of the parameters is invalid
+     */
+    public boolean verifyTableParameters(Integer pOffset, Integer pRecords) throws InvalidParameterException {
+        // check if offset is null
+        if (pOffset == null) {
+            // is null, throw exception
+            throw new InvalidParameterException("the [offset] parameter cannot be null");
+        }
+
+        // check if number of records is null
+        if (pRecords == null) {
+            // is null, throw exception
+            throw new InvalidParameterException("the [Number of Records] parameter cannot be null");
+        }
+
+        // finally
         return true;
     }
 

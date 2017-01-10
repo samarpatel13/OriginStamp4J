@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 import rx.Observable;
 
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -119,6 +121,9 @@ public class OriginStamp {
             throw new InvalidParameterException("The input parameter [EMAIL] is not valid");
         }
 
+        // verify index parameters
+        requestValidation.verifyTableParameters(pOffset, pAmount);
+
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
@@ -151,7 +156,16 @@ public class OriginStamp {
             throw new InvalidParameterException("The input parameter [DATE] is not valid");
         }
 
-        String dayString = "";
+        // verify index parameters
+        requestValidation.verifyTableParameters(pOffset, pAmount);
+
+        // Create an instance of SimpleDateFormat used for formatting
+        // the string representation of date (month/day/year)
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        // formatting the date
+        String dayString = df.format(pDay);
+        
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
@@ -169,9 +183,12 @@ public class OriginStamp {
      * @return Observable which can be subscribed on to get the hash table results
      * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
      */
-    public Observable<OriginStampTableEntity> getHashesForNoFilter(Integer pOffset, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForNoFilter(Integer pOffset, Integer pAmount) throws InvalidParameterException {
         LOGGER.info("requesting all hashes");
-        // TODO
+        // init request validation
+        RequestValidation requestValidation = new RequestValidation();
+        // verify index parameters
+        requestValidation.verifyTableParameters(pOffset, pAmount);
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
@@ -196,6 +213,11 @@ public class OriginStamp {
         if (pComment == null || pComment.isEmpty()) {
             throw new InvalidParameterException("The input parameter [COMMENT] is not valid");
         }
+
+        // init request validation
+        RequestValidation requestValidation = new RequestValidation();
+        // verify index parameters
+        requestValidation.verifyTableParameters(pOffset, pAmount);
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
@@ -228,6 +250,9 @@ public class OriginStamp {
             // throw exception because parameter is invalid
             throw new InvalidParameterException("The input parameter [API KEY] is not valid");
         }
+
+        // verify index parameters
+        requestValidation.verifyTableParameters(pOffset, pAmount);
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
