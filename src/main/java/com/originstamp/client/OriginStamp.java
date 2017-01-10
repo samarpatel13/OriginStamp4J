@@ -52,7 +52,7 @@ public class OriginStamp {
         // TODO converting
     }
 
-    public Observable<OriginStampTableEntity> getHashesForMail(String pMail, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForMail(String pMail, Integer pOffset, Integer pAmount) {
         LOGGER.info("requesting hashes for mail");
 
         // TODO validating input
@@ -61,10 +61,10 @@ public class OriginStamp {
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
         // returning Observable
-        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.MAIL, pMail, pStartIndex, pEndIndex, pAmount);
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.MAIL, pMail, pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForDay(Date pDay, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForDay(Date pDay, Integer pOffset, Integer pAmount) {
         LOGGER.info("requesting hashes for day");
 
         // TODO validating input
@@ -72,34 +72,34 @@ public class OriginStamp {
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
         // returning Observable
-        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.DAY, dayString, pStartIndex, pEndIndex, pAmount);
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.DAY, dayString, pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForNoFilter(Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForNoFilter(Integer pOffset, Integer pAmount) {
         LOGGER.info("requesting hashes for day");
         // TODO validating input
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
         // returning Observable
-        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.UNFILTERED, "", pStartIndex, pEndIndex, pAmount);
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.UNFILTERED, "", pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForComment(String pComment, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForComment(String pComment, Integer pOffset, Integer pAmount) {
         LOGGER.info("requesting hashes for comment");
         // TODO validating input
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
         // returning Observable
-        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.COMMENT, pComment, pStartIndex, pEndIndex, pAmount);
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.COMMENT, pComment, pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForAPIKey(String pAPIKey, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForAPIKey(String pAPIKey, Integer pOffset, Integer pAmount) {
         LOGGER.info("requesting hashes for api key");
         // TODO validating input
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
         // returning Observable
-        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.API_KEY, pAPIKey, pStartIndex, pEndIndex, pAmount);
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.API_KEY, pAPIKey, pOffset, pAmount);
     }
 
     public void storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter) {

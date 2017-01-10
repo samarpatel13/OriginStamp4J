@@ -2,6 +2,7 @@ package com.originstamp.client;
 
 import com.originstamp.client.dto.OriginStampHash;
 import com.originstamp.client.dto.OriginStampTableEntity;
+import com.originstamp.client.request.*;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
 import rx.Observable;
@@ -91,8 +92,13 @@ class OriginStampClient {
      *
      * @return
      */
-    public Observable<OriginStampTableEntity> getHashTableInformation(HashTableType pHashTableType, String pParameter, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashTableInformation(HashTableType pHashTableType, String pParameter, Integer pOffset, Integer pAmount) {
         LOGGER.info("creating Observable for Hash Table Information");
+
+        // fail save
+        if (pParameter == null || pParameter.isEmpty() || pParameter.matches("")) {
+            pHashTableType = HashTableType.UNFILTERED;
+        }
 
         // init entity
         Entity body = Entity.json("");
@@ -101,18 +107,57 @@ class OriginStampClient {
         switch (pHashTableType) {
             case MAIL: {
                 // creating body
+                RequestBodyTableMail requestBody = new RequestBodyTableMail();
+                // setting the parameters
+                requestBody.setEmail(pParameter);
+                requestBody.setOffset(pOffset);
+                requestBody.setRecords(pAmount);
+                // creating entity
+                body = Entity.json(requestBody);
                 break;
             }
             case COMMENT: {
                 // creating body
+                RequestBodyTableComment requestBody = new RequestBodyTableComment();
+                // setting the parameters
+                requestBody.setComment(pParameter);
+                requestBody.setOffset(pOffset);
+                requestBody.setRecords(pAmount);
+                // creating entity
+                body = Entity.json(requestBody);
+
                 break;
             }
             case UNFILTERED: {
                 // creating body
+                RequestBodyTableAll requestBody = new RequestBodyTableAll();
+                // setting the parameters
+                requestBody.setOffset(pOffset);
+                requestBody.setRecords(pAmount);
+                // creating entity
+                body = Entity.json(requestBody);
                 break;
             }
             case DAY: {
                 // creating body
+                RequestBodyTableDay requestBody = new RequestBodyTableDay();
+                // setting the parameters
+                requestBody.setDate_created(pParameter);
+                requestBody.setOffset(pOffset);
+                requestBody.setRecords(pAmount);
+                // creating entity
+                body = Entity.json(requestBody);
+                break;
+            }
+            case API_KEY: {
+                // creating body
+                RequestBodyTableApiKey requestBody = new RequestBodyTableApiKey();
+                // setting the parameters
+                requestBody.setApi_key(pParameter);
+                requestBody.setOffset(pOffset);
+                requestBody.setRecords(pAmount);
+                // creating entity
+                body = Entity.json(requestBody);
                 break;
             }
         }
