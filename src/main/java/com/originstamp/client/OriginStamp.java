@@ -3,7 +3,9 @@ package com.originstamp.client;
 import com.originstamp.client.dto.OriginStampHash;
 import com.originstamp.client.dto.OriginStampTableEntity;
 import com.originstamp.client.exceptions.InvalidConfigurationException;
+import com.originstamp.client.exceptions.InvalidParameterException;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.Request;
 import rx.Observable;
 
 import java.security.NoSuchAlgorithmException;
@@ -39,13 +41,25 @@ public class OriginStamp {
     private OriginStampConfiguration originStampConfiguration;
 
     /**
-     * requesting the hash information for a specified hash
+     * returns an observable which returns hash information for a given input hash
      *
-     * @param pHash a hash in HEX representation
+     * @param pHash input hash in hex representation
+     * @return Observable which can be subscribed on to get the results
+     * @throws InvalidParameterException an error is thrown when the hash format is invalid
      */
-    public Observable<OriginStampHash> getHashInformation(String pHash) {
+    public Observable<OriginStampHash> getHashInformation(String pHash) throws InvalidParameterException {
         LOGGER.info("requesting hash information for hash");
-        // TODO validating input
+
+        // init validation model
+        RequestValidation requestValidation = new RequestValidation();
+        // validate hash
+        boolean isValid = requestValidation.validateHashFormat(pHash);
+
+        // check if parameter is valid
+        if (!isValid) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("The hash format is not valid: Please use the HEX representation of SHA-256");
+        }
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
@@ -56,6 +70,13 @@ public class OriginStamp {
         return originStampClient.getHashInformation(pHash);
     }
 
+    /**
+     * The method returns hash information Observable for a byte array for which the SHA-256 is calculated
+     *
+     * @param pBytes inputstream
+     * @return Observalbe which can be subscribed on to get the results
+     * @throws NoSuchAlgorithmException an error is thrown when the hash algorithm (included in Java) was not found
+     */
     public Observable<OriginStampHash> getHashInformation(byte[] pBytes) throws NoSuchAlgorithmException {
         LOGGER.info("requesting hash information for bytes");
 
@@ -76,10 +97,28 @@ public class OriginStamp {
         return originStampClient.getHashInformation(hash);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForMail(String pMail, Integer pOffset, Integer pAmount) {
+    /**
+     * the method creates an Observable for requesting the hashes table by mail
+     *
+     * @param pMail   filter criteria: email
+     * @param pOffset offset: starting index (used for Pagination)
+     * @param pAmount number of tuples / records which should be returned
+     * @return Observable which can be subscribed on to get the hash table results for the specified email
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
+    public Observable<OriginStampTableEntity> getHashesForMail(String pMail, Integer pOffset, Integer pAmount) throws InvalidParameterException {
         LOGGER.info("requesting hashes for mail");
 
-        // TODO validating input
+        // validating input parameter
+        RequestValidation requestValidation = new RequestValidation();
+        // validate
+        boolean isValid = requestValidation.validateEmailFormat(pMail);
+
+        // check if parameter is valid
+        if (!isValid) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("The input parameter [EMAIL] is not valid");
+        }
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
@@ -90,10 +129,29 @@ public class OriginStamp {
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.MAIL, pMail, pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForDay(Date pDay, Integer pOffset, Integer pAmount) {
+    /**
+     * the method creates an Observable for requesting the hashes table by day
+     *
+     * @param pDay
+     * @param pOffset offset: starting index (used for Pagination)
+     * @param pAmount number of tuples / records which should be returned
+     * @return Observable which can be subscribed on to get the hash table results by day
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
+    public Observable<OriginStampTableEntity> getHashesForDay(Date pDay, Integer pOffset, Integer pAmount) throws InvalidParameterException {
         LOGGER.info("requesting hashes for day");
 
-        // TODO validating input
+        // validating input parameter
+        RequestValidation requestValidation = new RequestValidation();
+        // validate
+        boolean isValid = requestValidation.validateDate(pDay);
+
+        // check if parameter is valid
+        if (!isValid) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("The input parameter [DATE] is not valid");
+        }
+
         String dayString = "";
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
@@ -104,9 +162,17 @@ public class OriginStamp {
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.DAY, dayString, pOffset, pAmount);
     }
 
+    /**
+     * the method creates an Observable for requesting the hashes table raw
+     *
+     * @param pOffset offset: starting index (used for Pagination)
+     * @param pAmount number of tuples / records which should be returned
+     * @return Observable which can be subscribed on to get the hash table results
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
     public Observable<OriginStampTableEntity> getHashesForNoFilter(Integer pOffset, Integer pAmount) {
-        LOGGER.info("requesting hashes for day");
-        // TODO validating input
+        LOGGER.info("requesting all hashes");
+        // TODO
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
@@ -116,9 +182,22 @@ public class OriginStamp {
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.UNFILTERED, "", pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForComment(String pComment, Integer pOffset, Integer pAmount) {
+    /**
+     * the method creates an Observable for requesting the hashes table by comment
+     *
+     * @param pComment
+     * @param pOffset  offset: starting index (used for Pagination)
+     * @param pAmount  number of tuples / records which should be returned
+     * @return Observable which can be subscribed on to get the hash table results by comment
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
+    public Observable<OriginStampTableEntity> getHashesForComment(String pComment, Integer pOffset, Integer pAmount) throws InvalidParameterException {
         LOGGER.info("requesting hashes for comment");
-        // TODO validating input
+
+        if (pComment == null || pComment.isEmpty()) {
+            throw new InvalidParameterException("The input parameter [COMMENT] is not valid");
+        }
+
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
@@ -128,9 +207,29 @@ public class OriginStamp {
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.COMMENT, pComment, pOffset, pAmount);
     }
 
-    public Observable<OriginStampTableEntity> getHashesForAPIKey(String pAPIKey, Integer pOffset, Integer pAmount) {
+    /**
+     * the method creates an Observable for requesting the hashes table by api key
+     *
+     * @param pAPIKey
+     * @param pOffset offset: starting index (used for Pagination)
+     * @param pAmount number of tuples / records which should be returned
+     * @return Observable which can be subscribed on to get the hash table results by api key
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
+    public Observable<OriginStampTableEntity> getHashesForAPIKey(String pAPIKey, Integer pOffset, Integer pAmount) throws InvalidParameterException {
         LOGGER.info("requesting hashes for api key");
-        // TODO validating input
+
+        // validating input parameter
+        RequestValidation requestValidation = new RequestValidation();
+        // validate
+        boolean isValid = requestValidation.validateApiKeyFormat(pAPIKey);
+
+        // check if parameter is valid
+        if (!isValid) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("The input parameter [API KEY] is not valid");
+        }
+
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
 
@@ -140,8 +239,46 @@ public class OriginStamp {
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.API_KEY, pAPIKey, pOffset, pAmount);
     }
 
-    public Observable<OriginStampHash> storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter, boolean pBitcoin) {
+    /**
+     * @param pHash
+     * @param pComment
+     * @param pMail
+     * @param pTwitter
+     * @param pBitcoin
+     * @return
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
+    public Observable<OriginStampHash> storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter, boolean pBitcoin) throws InvalidParameterException {
         LOGGER.info("storing hash information");
+
+        // init validation
+        RequestValidation requestValidation = new RequestValidation();
+
+        // validate
+        boolean isValid = requestValidation.validateHashFormat(pHash);
+        // check if parameter is valid
+        if (!isValid) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("The hash format is not valid: Please use the HEX representation of SHA-256");
+        }
+
+        // check if timestamping method is selected
+        if (!pTwitter && !pBitcoin) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("At least one timestamping service (Twitter / Bitcoin) needs to be selected");
+        }
+
+        // evaluating email
+        if (pMail != null && !pMail.isEmpty()) {
+            // validating email
+            isValid = requestValidation.validateEmailFormat(pMail);
+
+            // check if parameter is valid
+            if (!isValid) {
+                // throw exception because parameter is invalid
+                throw new InvalidParameterException("The input parameter [EMAIL] is not valid");
+            }
+        }
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
@@ -150,5 +287,63 @@ public class OriginStamp {
 
         // returning Observable
         return originStampClient.storeHashInformation(pHash, pComment, pMail, pTwitter, pBitcoin);
+    }
+
+    /**
+     * @param pBytes
+     * @param pComment
+     * @param pMail
+     * @param pTwitter
+     * @param pBitcoin
+     * @return
+     * @throws NoSuchAlgorithmException  an error is thrown when the hash algorithm (included in Java) was not found
+     * @throws InvalidParameterException The exception is thrown when an input parameter is not valid
+     */
+    public Observable<OriginStampHash> storeHashInformation(byte[] pBytes, String pComment, String pMail, boolean pTwitter, boolean pBitcoin) throws NoSuchAlgorithmException, InvalidParameterException {
+        LOGGER.info("storing hash information");
+
+        LOGGER.info("calculating hash for bytes");
+        // init hash model
+        HashModel hashModel = new HashModel();
+        // calculate SHA 256
+        LOGGER.info("calculating SHA-256");
+        String sha256 = hashModel.getSHA256(pBytes);
+
+        // init validation
+        RequestValidation requestValidation = new RequestValidation();
+
+        // validate
+        boolean isValid = requestValidation.validateHashFormat(sha256);
+        // check if parameter is valid
+        if (!isValid) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("The hash format is not valid: Please use the HEX representation of SHA-256");
+        }
+
+        // check if timestamping method is selected
+        if (!pTwitter && !pBitcoin) {
+            // throw exception because parameter is invalid
+            throw new InvalidParameterException("At least one timestamping service (Twitter / Bitcoin) needs to be selected");
+        }
+
+        // evaluating email
+        if (pMail != null && !pMail.isEmpty()) {
+            // validating email
+            isValid = requestValidation.validateEmailFormat(pMail);
+
+            // check if parameter is valid
+            if (!isValid) {
+                // throw exception because parameter is invalid
+                throw new InvalidParameterException("The input parameter [EMAIL] is not valid");
+            }
+        }
+
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("create and return Observable");
+
+        // returning Observable
+        return originStampClient.storeHashInformation(sha256, pComment, pMail, pTwitter, pBitcoin);
     }
 }
