@@ -4,7 +4,9 @@ import com.originstamp.client.dto.OriginStampHash;
 import com.originstamp.client.dto.OriginStampTableEntity;
 import com.originstamp.client.request.*;
 import org.apache.log4j.Logger;
+import org.glassfish.jersey.client.rx.Rx;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 import rx.Observable;
 
 import javax.ws.rs.client.Client;
@@ -80,16 +82,17 @@ class OriginStampClient {
      */
     public Observable<OriginStampHash> getHashInformation(String pHash) {
         LOGGER.info("creating Observable from configuration and parameters");
+        LOGGER.info(pHash);
+        LOGGER.info(this.originStampConfiguration.getHost() + URI_HASH_VALUE);
 
         // building observable and return
-        return RxObservable.from(this.restClient)
+        return Rx.newClient(RxObservableInvoker.class)
                 .target(this.originStampConfiguration.getHost() + URI_HASH_VALUE)
                 .resolveTemplate("hash_value", pHash)
                 .request()
                 .headers(this.header)
                 .rx()
-                .get(new GenericType<OriginStampHash>() {
-                });
+                .get(OriginStampHash.class);
     }
 
     /**
@@ -146,8 +149,7 @@ class OriginStampClient {
                 .request()
                 .headers(this.header)
                 .rx()
-                .post(body, new GenericType<OriginStampHash>() {
-                });
+                .post(body, OriginStampHash.class);
     }
 
     /**
