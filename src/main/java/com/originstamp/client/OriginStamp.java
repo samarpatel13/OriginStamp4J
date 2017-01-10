@@ -5,10 +5,13 @@ import com.originstamp.client.dto.OriginStampTableEntity;
 import org.apache.log4j.Logger;
 import rx.Observable;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 /**
  * Created by Thomas on 10.01.17.
+ *
+ * @author Thomas Hepp
  */
 public class OriginStamp {
     // logger
@@ -44,12 +47,24 @@ public class OriginStamp {
         return originStampClient.getHashInformation(pHash);
     }
 
-    public void getHashInformation(byte[] pBytes) {
+    public Observable<OriginStampHash> getHashInformation(byte[] pBytes) throws NoSuchAlgorithmException {
         LOGGER.info("requesting hash information for bytes");
+
+        LOGGER.info("converting bytes to hash");
+
+        // init hash model
+        HashModel hashModel = new HashModel();
+
+        // convert to HEX String
+        String hash = hashModel.getSHA256(pBytes);
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
-        // TODO converting
+
+        LOGGER.info("creating Observable");
+
+        // returning observable
+        return originStampClient.getHashInformation(hash);
     }
 
     public Observable<OriginStampTableEntity> getHashesForMail(String pMail, Integer pOffset, Integer pAmount) {
@@ -59,6 +74,8 @@ public class OriginStamp {
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("create and return Observable");
 
         // returning Observable
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.MAIL, pMail, pOffset, pAmount);
@@ -71,6 +88,9 @@ public class OriginStamp {
         String dayString = "";
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("create and return Observable");
+
         // returning Observable
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.DAY, dayString, pOffset, pAmount);
     }
@@ -80,6 +100,9 @@ public class OriginStamp {
         // TODO validating input
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("create and return Observable");
+
         // returning Observable
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.UNFILTERED, "", pOffset, pAmount);
     }
@@ -89,6 +112,9 @@ public class OriginStamp {
         // TODO validating input
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("create and return Observable");
+
         // returning Observable
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.COMMENT, pComment, pOffset, pAmount);
     }
@@ -98,16 +124,22 @@ public class OriginStamp {
         // TODO validating input
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("create and return Observable");
+
         // returning Observable
         return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.API_KEY, pAPIKey, pOffset, pAmount);
     }
 
-    public void storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter) {
+    public Observable<OriginStampHash> storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter, boolean pBitcoin) {
         LOGGER.info("storing hash information");
 
         // init rest client
         OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
-        // TODO
-    }
 
+        LOGGER.info("create and return Observable");
+
+        // returning Observable
+        return originStampClient.storeHashInformation(pHash, pComment, pMail, pTwitter, pBitcoin);
+    }
 }
