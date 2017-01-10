@@ -1,6 +1,10 @@
 package com.originstamp.client;
 
+import com.originstamp.client.dto.OriginStampHash;
+import com.originstamp.client.dto.OriginStampTableEntity;
 import org.apache.log4j.Logger;
+import rx.Observable;
+
 import java.util.Date;
 
 /**
@@ -27,38 +31,82 @@ public class OriginStamp {
      *
      * @param pHash a hash in HEX representation
      */
-    public void getHashInformation(String pHash) {
+    public Observable<OriginStampHash> getHashInformation(String pHash) {
         LOGGER.info("requesting hash information for hash");
-        return;
+        // TODO validating input
+
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        LOGGER.info("creating Observable");
+
+        // returning observable
+        return originStampClient.getHashInformation(pHash);
     }
 
     public void getHashInformation(byte[] pBytes) {
         LOGGER.info("requesting hash information for bytes");
-        // TODO
+
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+        // TODO converting
     }
 
-    public void getHashesForMail(String pMail, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForMail(String pMail, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
         LOGGER.info("requesting hashes for mail");
-        // TODO
+
+        // TODO validating input
+
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+
+        // returning Observable
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.MAIL, pMail, pStartIndex, pEndIndex, pAmount);
     }
 
-    public void getHashesForDay(Date pDay, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForDay(Date pDay, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
         LOGGER.info("requesting hashes for day");
-        // TODO
+
+        // TODO validating input
+        String dayString = "";
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+        // returning Observable
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.DAY, dayString, pStartIndex, pEndIndex, pAmount);
     }
 
-    public void getHashesForComment(String pComment, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForNoFilter(Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+        LOGGER.info("requesting hashes for day");
+        // TODO validating input
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+        // returning Observable
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.UNFILTERED, "", pStartIndex, pEndIndex, pAmount);
+    }
+
+    public Observable<OriginStampTableEntity> getHashesForComment(String pComment, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
         LOGGER.info("requesting hashes for comment");
-        // TODO
+        // TODO validating input
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+        // returning Observable
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.COMMENT, pComment, pStartIndex, pEndIndex, pAmount);
     }
 
-    public void getHashesForAPIKey(String pAPIKey, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
+    public Observable<OriginStampTableEntity> getHashesForAPIKey(String pAPIKey, Integer pStartIndex, Integer pEndIndex, Integer pAmount) {
         LOGGER.info("requesting hashes for api key");
-        // TODO
+        // TODO validating input
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
+        // returning Observable
+        return originStampClient.getHashTableInformation(OriginStampClient.HashTableType.API_KEY, pAPIKey, pStartIndex, pEndIndex, pAmount);
     }
 
     public void storeHashInformation(String pHash, String pComment, String pMail, boolean pTwitter) {
         LOGGER.info("storing hash information");
+
+        // init rest client
+        OriginStampClient originStampClient = new OriginStampClient(this.originStampConfiguration);
         // TODO
     }
 
