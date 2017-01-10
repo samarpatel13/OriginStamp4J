@@ -6,6 +6,9 @@ import java.io.Serializable;
 
 /**
  * Created by Thomas on 10.01.17.
+ *
+ * @author Thomas Hepp
+ *         the class is a DTO which is parsed to JSON by Jersey and represents a request body for POST requests
  */
 @XmlRootElement(name = "body")
 public class RequestBodyTableApiKey implements Serializable {

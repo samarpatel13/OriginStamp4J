@@ -6,7 +6,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by Thomas on 07.12.16.
+ * Created by Thomas on 10.01.17.
+ *
+ * @author Thomas Hepp
+ *         the class calculates the hash of a given byte array input. The hash is represented by a HEX string with the length of 64.
  */
 class HashModel {
     // logger

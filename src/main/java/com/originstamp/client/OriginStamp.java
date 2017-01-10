@@ -2,6 +2,7 @@ package com.originstamp.client;
 
 import com.originstamp.client.dto.OriginStampHash;
 import com.originstamp.client.dto.OriginStampTableEntity;
+import com.originstamp.client.exceptions.InvalidConfigurationException;
 import org.apache.log4j.Logger;
 import rx.Observable;
 
@@ -12,6 +13,8 @@ import java.util.Date;
  * Created by Thomas on 10.01.17.
  *
  * @author Thomas Hepp
+ *         Main class which is the interface between a program and the API.
+ *         As a result of the requests, Observables are returned which are used for the access on the API
  */
 public class OriginStamp {
     // logger
@@ -20,8 +23,14 @@ public class OriginStamp {
     /**
      * creates a new instance of the current class and hands over the configuration for the API access
      */
-    public OriginStamp(OriginStampConfiguration pOriginStampConfiguration) {
+    public OriginStamp(OriginStampConfiguration pOriginStampConfiguration) throws InvalidConfigurationException {
         LOGGER.info("init originstamp main class");
+
+        // init validation model
+        RequestValidation requestValidation = new RequestValidation();
+        // validate configuration
+        requestValidation.verifyConfiguration(pOriginStampConfiguration);
+
         // validation of the configuration
         this.originStampConfiguration = pOriginStampConfiguration;
     }

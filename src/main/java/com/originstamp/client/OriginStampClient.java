@@ -18,6 +18,9 @@ import java.util.List;
 
 /**
  * Created by Thomas on 10.01.17.
+ *
+ * @author Thomas Hepp
+ *         The class contains creates the clients for the requests on the API
  */
 class OriginStampClient {
     // static values
