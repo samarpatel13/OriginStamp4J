@@ -90,6 +90,26 @@ public class OriginStampHash {
         private String timestamp;
         @XmlElement(name = "tx_hash")
         private String transactionHash;
+        @XmlElement(name = "btc_address")
+        private String bitCoinAddress;
+        @XmlElement(name = "pub_key")
+        private String publicKey;
+
+        public String getBitCoinAddress() {
+            return bitCoinAddress;
+        }
+
+        public void setBitCoinAddress(String bitCoinAddress) {
+            this.bitCoinAddress = bitCoinAddress;
+        }
+
+        public String getPublicKey() {
+            return publicKey;
+        }
+
+        public void setPublicKey(String publicKey) {
+            this.publicKey = publicKey;
+        }
 
         public Integer getBlockDepth() {
             return blockDepth;
@@ -145,6 +165,26 @@ public class OriginStampHash {
         private String timestamp;
         @XmlElement(name = "tx_hash")
         private String transactionHash;
+        @XmlElement(name = "btc_address")
+        private String bitCoinAddress;
+        @XmlElement(name = "pub_key")
+        private String publicKey;
+
+        public String getBitCoinAddress() {
+            return bitCoinAddress;
+        }
+
+        public void setBitCoinAddress(String bitCoinAddress) {
+            this.bitCoinAddress = bitCoinAddress;
+        }
+
+        public String getPublicKey() {
+            return publicKey;
+        }
+
+        public void setPublicKey(String publicKey) {
+            this.publicKey = publicKey;
+        }
 
         public Integer getBlockDepth() {
             return blockDepth;
