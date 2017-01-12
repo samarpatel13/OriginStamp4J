@@ -122,7 +122,7 @@ class OriginStampClient {
         // check if mail is set
         if (pEmail != null && !pEmail.isEmpty()) {
             // set email in body
-            requestBody.setEmail(pEmail);
+            requestBody.setEmail(pEmail.toLowerCase());
         }
 
         // create timestamp operations
