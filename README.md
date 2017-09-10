@@ -34,7 +34,7 @@ and finally the dependency
     <dependency>
         <groupId>com.github.ag-gipp</groupId>
         <artifactId>origin_stamp-java-client</artifactId>
-        <version>v1.0.3</version>
+        <version>v1.0.4</version>
     </dependency>
 
 
@@ -52,7 +52,7 @@ Add it in your root build.gradle at the end of repositories:
 Add the dependency
 
         dependencies {
-		compile 'com.github.ag-gipp:origin_stamp-java-client:v1.0.3'
+		compile 'com.github.ag-gipp:origin_stamp-java-client:v1.0.4'
 	}
 
 
