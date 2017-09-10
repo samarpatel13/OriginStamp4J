@@ -1,6 +1,7 @@
 package com.originstamp.client.dto;
 
 import javax.xml.bind.annotation.*;
+import java.util.List;
 
 /**
  * Created by Thomas on 10.01.17.
@@ -26,6 +27,8 @@ public class OriginStampHash {
     private MultiSeed multiSeed;
     @XmlElement(name = "single_seed")
     private SingleSeed singleSeed;
+    @XmlAnyElement(lax = true)
+    private List<Object> anything;
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
@@ -289,5 +292,13 @@ public class OriginStampHash {
 
     public void setSingleSeed(SingleSeed singleSeed) {
         this.singleSeed = singleSeed;
+    }
+
+    public List<Object> getAnything() {
+        return anything;
+    }
+
+    public void setAnything(List<Object> anything) {
+        this.anything = anything;
     }
 }
