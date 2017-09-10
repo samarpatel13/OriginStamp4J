@@ -1,4 +1,4 @@
-# origin_stamp-java-library
+# OriginStamp4J - the java client for OriginStamp
 This library provides an implemented Java Interface to the OriginStamp API. The library supports Java developers to create new applications for the OriginStamp Trusted Timestamping Service: https://www.originstamp.org
 
 The framework is based on Reactive Java which allows to easily deal with asynchronous callbacks.
