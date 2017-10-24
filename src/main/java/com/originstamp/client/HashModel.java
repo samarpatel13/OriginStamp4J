@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  */
 class HashModel {
     // logger
-    private static final Logger LOGGER = LoggerFactory.getFileLogger(HashModel.class.getSimpleName(), true);
+    private static final Logger LOGGER = Logger.getLogger(HashModel.class);
 
     /**
      * creates a new instance of the hash model class

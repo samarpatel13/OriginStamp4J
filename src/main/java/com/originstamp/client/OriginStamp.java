@@ -21,7 +21,7 @@ import java.util.Date;
  */
 public class OriginStamp {
     // logger
-    private static final Logger LOGGER = LoggerFactory.getFileLogger(OriginStamp.class.getSimpleName(), true);
+    private static final Logger LOGGER = Logger.getLogger(OriginStamp.class);
 
     /**
      * creates a new instance of the current class and hands over the configuration for the API access

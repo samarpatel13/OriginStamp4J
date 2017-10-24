@@ -22,7 +22,7 @@ import java.util.List;
  * Created by Thomas on 10.01.17.
  *
  * @author Thomas Hepp
- *         The class contains creates the clients for the requests on the API
+ * The class contains creates the clients for the requests on the API
  */
 class OriginStampClient {
     // static values
@@ -30,7 +30,8 @@ class OriginStampClient {
     private static final String URI_TABLE = "api/table";
 
     // logger
-    private static final Logger LOGGER = LoggerFactory.getFileLogger(OriginStampClient.class.getSimpleName(), true);
+    private static final Logger LOGGER = Logger.getLogger(OriginStampClient.class);
+
     // member variable
     private OriginStampConfiguration originStampConfiguration;
 

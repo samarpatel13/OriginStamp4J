@@ -12,11 +12,11 @@ import java.util.UUID;
  * Created by Thomas on 10.01.17.
  *
  * @author Thomas Hepp
- *         the class deals with the validation of the request parameters. if valid a boolean = true is returned otherwise false
+ * the class deals with the validation of the request parameters. if valid a boolean = true is returned otherwise false
  */
 class RequestValidation {
     // logger
-    private static final Logger LOGGER = LoggerFactory.getFileLogger(RequestValidation.class.getSimpleName(), true);
+    private static final Logger LOGGER = Logger.getLogger(RequestValidation.class);
 
     /**
      * the method validates the originstamp configuration object

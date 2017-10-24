@@ -1,8 +1,8 @@
 package com.originstamp.client.dto;
 
 import javax.xml.bind.annotation.*;
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 /**
  * Created by Thomas on 10.01.17.
  *
